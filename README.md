@@ -1,27 +1,26 @@
-# AppUI
+# Applicant Tracking System
+- [DENR-HR](http://DENR-HR.com/)
+- And this will connect to their main website: [DENR region 2](https://r2.denr.gov.ph/)
+- This application will monitor and serve application process of clients of DENR Region 2.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.3.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:8081/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Administrators
+### User management *
+### Office Management
+### Salary Grade Management
+### Competency Management
+### Position Management
+### Vacant Position Management
+### Pending Applicants
+### General List and Report
+### Candidate Evaluation and Report
+### Long List Management and Report
+### Interview Rating Dashboard for Raters
+### Comprehensive Evaluation and Report
+### Short List Management and Report
+### Appointment Management and Report
+### Signatory Management
+## Users
+### Job Portal (Landing/Page)
+### My Application
+### Profile
+### Downloadable Forms
