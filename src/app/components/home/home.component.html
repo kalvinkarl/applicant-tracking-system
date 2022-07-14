@@ -38,7 +38,7 @@
 					DENR JOBS 
 				</a>
 			</span>
-			<span *ngIf="!(isHandset$ | async)">
+			<span *ngIf="(!(isHandset$ | async)) && (!serverConnectionError)">
 				<a mat-button routerLinkActive="active-link" routerLink="/signin">
 					Login
 				</a>
@@ -47,7 +47,10 @@
 				</a>
 			</span>
 		</mat-toolbar>
-		<div class="container">
+		<div *ngIf="serverConnectionError" class="container">
+			<p>{{serverConnectionError}}</p>
+		</div>
+		<div *ngIf="!serverConnectionError" class="container">
 			<router-outlet></router-outlet>
 		</div>
 	</mat-sidenav-content>
