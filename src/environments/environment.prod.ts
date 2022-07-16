@@ -1,4 +1,4 @@
 export const environment = {
-  production: true
+  production: false,
+  apiUrl: "https://vcylcnlvog.execute-api.ca-central-1.amazonaws.com/applicant-tracking-api"
 };
-export const apiUrl = "https://vcylcnlvog.execute-api.ca-central-1.amazonaws.com/applicant-tracking-api";

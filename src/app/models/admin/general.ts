@@ -9,3 +9,18 @@ export class GeneralEvaluation{
 	latestIpcrRating?: Number;
 	remarks?: String;
 }
+export class Experience{
+	applicantId?: Number;
+	positionDesignation?: string;
+	from?: Date;
+	to?: Date;
+}
+export class Training{
+	applicantId?: Number;
+	title?: String;
+	providerOrganizer?: String;
+	from?: Date;
+	to?: Date;
+	hours?: Number;
+	typeOfLD?: String;
+}

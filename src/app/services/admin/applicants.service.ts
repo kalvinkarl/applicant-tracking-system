@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { apiUrl } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { Applicant } from 'src/app/models/admin/applicant';
 
 const httpOptions = {
@@ -14,9 +14,9 @@ const httpOptions = {
 export class ApplicantsService {
   constructor(private http: HttpClient) { }
   findAll(): Observable<Applicant> {
-    return this.http.get(`${apiUrl}/admin/applicants`, httpOptions);
+    return this.http.get(`${environment.apiUrl}/admin/applicants`, httpOptions);
   }
   findGeneral(): Observable<Applicant> {
-    return this.http.get(`${apiUrl}/admin/applicants/General`, httpOptions);
+    return this.http.get(`${environment.apiUrl}/admin/applicants/General`, httpOptions);
   }
 }

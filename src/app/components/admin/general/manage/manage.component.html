@@ -60,7 +60,7 @@
 							<mat-label>Eligibility</mat-label>
 							<mat-chip-list #eligibilityChipList aria-label="Eligibility Selection">
 								<mat-chip *ngFor="let eligibility of eligibilities" (removed)="removeEligibility(eligibility)">
-									{{eligibility.name}}
+									{{eligibility}}
 									<button matChipRemove>
 										<mat-icon>cancel</mat-icon>
 									</button>
@@ -86,7 +86,7 @@
 							<mat-label>Educational attainment</mat-label>
 							<mat-chip-list #educationChipList aria-label="Educational Attainment Selection">
 								<mat-chip *ngFor="let education of educationalAttainments" (removed)="removeEducation(education)">
-									{{education.name}}
+									{{education}}
 									<button matChipRemove>
 									<mat-icon>cancel</mat-icon>
 									</button>

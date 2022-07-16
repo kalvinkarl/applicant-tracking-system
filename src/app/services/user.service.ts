@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { apiUrl } from 'src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
 
 const httpOptions = {
@@ -15,20 +15,20 @@ export class UserService {
   //To omit only 1 field
   //Omit<User,"Username">
   signup(data: any): Observable<User> {
-    return this.http.post<User>(`${apiUrl}/users/signup`, data);
+    return this.http.post<User>(`${environment.apiUrl}/users/signup`, data);
   }
   signin(user: User): Observable<any> {
-    return this.http.post<User>(`${apiUrl}/users/signin`,user);
+    return this.http.post<User>(`${environment.apiUrl}/users/signin`,user);
   }
   resendVerification(email: any): Observable<any> {
-    return this.http.post<any>(`${apiUrl}/users/verify`, email);
+    return this.http.post<any>(`${environment.apiUrl}/users/verify`, email);
   }
   verify(userId: any, uniqueString: any ): Observable<any> {
-    return this.http.get<User[]>(`${apiUrl}/users/verify/${userId}/${uniqueString}`);
+    return this.http.get<User[]>(`${environment.apiUrl}/users/verify/${userId}/${uniqueString}`);
   }
   //---------------------------------------SECURED--------------------------------------------------------
   findByUsername(Username: any): Observable<User> {
-    return this.http.get(`${apiUrl}/users/u/${Username}`, httpOptions);
+    return this.http.get(`${environment.apiUrl}/users/u/${Username}`, httpOptions);
   }
   // findByUsername(Username: any): Observable<User[]> {
   //   return this.http.get<User[]>(`${baseUrl}?Username=${Username}`);

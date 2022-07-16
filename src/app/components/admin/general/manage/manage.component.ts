@@ -4,13 +4,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Applicant } from 'src/app/models/admin/applicant';
-import { GeneralEvaluation } from 'src/app/models/admin/generalEvaluation';
-import { Experience } from 'src/app/models/admin/experience';
-import { Training } from 'src/app/models/admin/training';
+import { GeneralEvaluation, Experience, Training } from 'src/app/models/admin/general';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-
-export interface Eligibility{ name: string; }
-export interface Education{ name: string; }
+import { GeneralService } from 'src/app/services/admin/general.service';
 
 @Component({
 	selector: 'app-manage',
@@ -24,8 +20,8 @@ export class ManageComponent implements OnInit {
 	experiencesForm!: FormGroup;
 	trainingsForm!: FormGroup;
 	applicant!: Applicant;
-	eligibilities: Eligibility[] = new Array<Eligibility>;
-	educationalAttainments: Education[] = new Array<Education>;
+	eligibilities: string[] = new Array;
+	educationalAttainments: string[] = new Array;
 
 	generalEvaluation!: GeneralEvaluation;
 	experiences: Experience[]= new Array<Experience>;
@@ -39,8 +35,9 @@ export class ManageComponent implements OnInit {
 	@ViewChild('experiencesTable') experiencesTable!: MatTable<Experience>;
 	@ViewChild('trainingsTable') trainingsTable!: MatTable<Training>;
 
-	constructor(private dialogRef: MatDialogRef<ManageComponent>) {
+	constructor(private dialogRef: MatDialogRef<ManageComponent>,private generalService: GeneralService) {
 		this.generalEvaluationForm = new FormGroup({
+			applicantId: new FormControl(''),
 			salaryGrade: new FormControl(''),
 			placeOfAssignment: new FormControl(''),
 			statusOfAppointment: new FormControl(''),
@@ -50,11 +47,13 @@ export class ManageComponent implements OnInit {
 			educationalAttainment: new FormControl('',Validators.required)
 		});
 		this.experiencesForm = new FormGroup({
+			applicantId: new FormControl(''),
 			positionDesignation: new FormControl('',Validators.required),
 			from: new FormControl('',Validators.required),
 			to: new FormControl('',Validators.required)
 		})
 		this.trainingsForm = new FormGroup({
+			applicantId: new FormControl(''),
 			title: new FormControl('',Validators.required),
 			providerOrganizer: new FormControl('',Validators.required),
 			from: new FormControl('',Validators.required),
@@ -67,23 +66,59 @@ export class ManageComponent implements OnInit {
 	ngOnInit(): void { }
 
 	onSave(){
-		console.log("saved");
-		console.log(this.generalEvaluationForm.value);
-		console.log(this.eligibilities);
-		console.log(this.educationalAttainments);
-		console.log(this.experiences);
-		console.log(this.trainings);
+		this.generalEvaluationForm.value.applicantId = this.applicant.id;
+		this.generalEvaluationForm.value.eligibility =  this.eligibilities.join(',');
+		this.generalEvaluationForm.value.educationalAttainment =  this.educationalAttainments.join(',');
+		this.experiencesForm.value.applicantId = this.applicant.id;
+		this.trainingsForm.value.applicantId = this.applicant.id;
+		this.generalService.createEvaluation(this.generalEvaluationForm.value).subscribe({
+			next: res => {
+				console.log(res)
+			},
+			error: err => {
+				console.log(err)
+			}
+		});
+		this.experiences.forEach( experience => {
+			this.generalService.createExperience(experience).subscribe({
+				next: res => {
+					console.log(res)
+				},
+				error: err => {
+					console.log(err)
+				}
+			})
+		});
+		this.trainings.forEach(training => {
+			this.generalService.createTraining(training).subscribe({
+				next: res => {
+					console.log(res)
+				},
+				error: err => {
+					console.log(err)
+				}
+			})
+		});
+		// console.log(this.generalEvaluationForm.value);
+		// this.experiences.forEach( experience => {
+		// 	console.log(experience);
+		// });
+		// this.trainings.forEach(training => {
+		// 	console.log(training);
+		// });
 		this.dialogRef.close();
 	}
 	//Eligibiiligy button events
 	addEligibility(event: MatChipInputEvent): void {
 		const value = (event.value || '').trim();
 		if (value) {
-		  this.eligibilities.push({name: value});
+			if(this.eligibilities.indexOf(value) < 0){
+				this.eligibilities.push(value);
+			}
 		}
 		event.chipInput!.clear();
 	}
-	removeEligibility(eligibility: Eligibility): void {
+	removeEligibility(eligibility: string): void {
 		const index = this.eligibilities.indexOf(eligibility);
 		if (index >= 0) {
 			this.eligibilities.splice(index, 1);
@@ -93,11 +128,11 @@ export class ManageComponent implements OnInit {
 	addEducation(event: MatChipInputEvent): void {
 		const value = (event.value || '').trim();
 		if (value) {
-		  this.educationalAttainments.push({name: value});
+		  this.educationalAttainments.push(value);
 		}
 		event.chipInput!.clear();
 	}
-	removeEducation(education: Education): void {
+	removeEducation(education: string): void {
 		const index = this.educationalAttainments.indexOf(education);
 		if (index >= 0) {
 			this.educationalAttainments.splice(index, 1);

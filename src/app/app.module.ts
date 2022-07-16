@@ -64,8 +64,8 @@ import { VerifyComponent } from './components/verify/verify.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ProfileComponent } from './components/admin/profile/profile.component';
 import { ApplicantsComponent } from './components/admin/applicants/applicants.component';
-import { GeneralComponent } from './components/admin/applicants/general/general.component';
-import { ManageComponent } from './components/admin/applicants/general/manage/manage.component';
+import { GeneralComponent } from './components/admin/general/general.component';
+import { ManageComponent } from './components/admin/general/manage/manage.component';
 //------------------------Applicant-------------------------------
 import { ApplicantComponent } from './components/applicant/applicant.component';
 //------------------------Evaluator-------------------------------

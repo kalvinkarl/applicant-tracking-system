@@ -10,7 +10,7 @@ import { ApplicantComponent } from './components/applicant/applicant.component';
 import { EvaluatorComponent } from './components/evaluator/evaluator.component';
 import { ProfileComponent } from './components/admin/profile/profile.component';
 import { ApplicantsComponent } from './components/admin/applicants/applicants.component';
-import { GeneralComponent } from './components/admin/applicants/general/general.component';
+import { GeneralComponent } from './components/admin/general/general.component';
 import { AuthGuard } from './services/auth.guard';
 import { AdminGuard } from './services/admin/admin.guard';
 
