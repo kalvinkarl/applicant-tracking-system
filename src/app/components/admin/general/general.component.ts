@@ -13,7 +13,7 @@ import { Applicant } from 'src/app/models/admin/applicant';
   styleUrls: ['./general.component.scss']
 })
 export class GeneralComponent implements OnInit {
-  displayedColumns: string[] = ['Name', 'Gender', 'Age', 'Contact', 'actions'];
+  displayedColumns: string[] = ['firstname', 'gender', 'age', 'contactNumber', 'actions'];
   dataSource!: MatTableDataSource<Applicant>;
   applicants!: any;
   applicant!: Applicant;
@@ -22,6 +22,11 @@ export class GeneralComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(public dialog: MatDialog, private applicantsService: ApplicantsService) {
+    this.loadGeneralApplicants();
+  }
+  ngOnInit(): void { }
+
+  loadGeneralApplicants(): void{
     this.applicantsService.findGeneral().subscribe({
       next: res => {
         this.applicants = res;
@@ -31,10 +36,8 @@ export class GeneralComponent implements OnInit {
       },error: err => {
         console.log(err)
       }
-    })
+    });
   }
-  ngOnInit(): void { }
-
   onManage(applicant: Applicant){
     const dialogRef = this.dialog.open(ManageComponent,{
       autoFocus: false,
@@ -45,6 +48,9 @@ export class GeneralComponent implements OnInit {
       disableClose: true //disables closing on clicking outside box. You will need to make a dedicated button to close
     });
     dialogRef.componentInstance.applicant = applicant;
+    dialogRef.afterClosed().subscribe(res => {
+      this.loadGeneralApplicants();
+    });
   }
 
   onEdit(user: any){

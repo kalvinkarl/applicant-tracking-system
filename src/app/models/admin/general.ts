@@ -8,6 +8,8 @@ export class GeneralEvaluation{
 	dateOfLastPromotion?: Date;
 	latestIpcrRating?: Number;
 	remarks?: String;
+	experiences?: Experience[];
+	trainings?: Training[];
 }
 export class Experience{
 	applicantId?: Number;

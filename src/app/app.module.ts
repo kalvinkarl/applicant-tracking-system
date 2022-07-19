@@ -64,8 +64,9 @@ import { VerifyComponent } from './components/verify/verify.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ProfileComponent } from './components/admin/profile/profile.component';
 import { ApplicantsComponent } from './components/admin/applicants/applicants.component';
+import { ManageComponent as ManageApplicantComponent } from './components/admin/applicants/manage/manage.component';
 import { GeneralComponent } from './components/admin/general/general.component';
-import { ManageComponent } from './components/admin/general/manage/manage.component';
+import { ManageComponent as ManageGeneralComponent } from './components/admin/general/manage/manage.component';
 //------------------------Applicant-------------------------------
 import { ApplicantComponent } from './components/applicant/applicant.component';
 //------------------------Evaluator-------------------------------
@@ -84,7 +85,8 @@ import { EvaluatorComponent } from './components/evaluator/evaluator.component';
     ProfileComponent,
     ApplicantsComponent,
     GeneralComponent,
-    ManageComponent,
+    ManageGeneralComponent,
+    ManageApplicantComponent,
   ],
   imports: [
     A11yModule,
