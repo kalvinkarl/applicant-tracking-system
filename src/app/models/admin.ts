@@ -1,28 +1,36 @@
-export class GeneralEvaluation{
+export class Applicant{
+	id?: Number;
+	firstname?: String;
+	middlename?: String;
+	lastname?: String;
+	email?:  String;
+	contactNumber?: String;
+	gender?:  String;
+	age?:  String;
+	birthday?: String;
+}
+export class Achievement{
 	applicantId?: Number;
 	eligibility?: String;
 	salaryGrade?: String;
 	placeOfAssignment?: String;
 	statusOfAppointment?: String;
 	educationalAttainment?: String;
-	dateOfLastPromotion?: Date;
+	dateOfLastPromotion?: String;
 	latestIpcrRating?: Number;
-	remarks?: String;
-	experiences?: Experience[];
-	trainings?: Training[];
 }
 export class Experience{
 	applicantId?: Number;
-	positionDesignation?: string;
-	from?: Date;
-	to?: Date;
+	positionDesignation?: String;
+	from?: String;
+	to?: String;
 }
 export class Training{
 	applicantId?: Number;
 	title?: String;
 	providerOrganizer?: String;
-	from?: Date;
-	to?: Date;
+	from?: String;
+	to?: String;
 	hours?: Number;
 	typeOfLD?: String;
 }

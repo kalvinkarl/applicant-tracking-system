@@ -4,8 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageComponent } from './manage/manage.component';
-import { ApplicantsService } from 'src/app/services/admin/applicants.service';
-import { Applicant } from 'src/app/models/admin/applicant';
+import { Applicant } from 'src/app/models/admin';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-general',
@@ -21,13 +21,13 @@ export class GeneralComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(public dialog: MatDialog, private applicantsService: ApplicantsService) {
+  constructor(public dialog: MatDialog, private adminService: AdminService) {
     this.loadGeneralApplicants();
   }
   ngOnInit(): void { }
 
   loadGeneralApplicants(): void{
-    this.applicantsService.findGeneral().subscribe({
+    this.adminService.findGeneral().subscribe({
       next: res => {
         this.applicants = res;
         this.dataSource = new MatTableDataSource(this.applicants);

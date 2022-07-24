@@ -4,8 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ManageComponent } from './manage/manage.component';
-import { ApplicantsService } from 'src/app/services/admin/applicants.service';
-import { Applicant } from 'src/app/models/admin/applicant';
+import { Applicant } from 'src/app/models/admin';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
 	selector: 'app-applicants',
@@ -13,7 +13,8 @@ import { Applicant } from 'src/app/models/admin/applicant';
 	styleUrls: ['./applicants.component.scss']
 })
 export class ApplicantsComponent implements OnInit  {
-	displayedColumns: string[] = ['firstname', 'gender', 'age', 'contactNumber', 'actions'];
+	progress!: Boolean;
+	displayedColumns: String[] = ['firstname', 'gender', 'age', 'contactNumber', 'actions'];
 	dataSource!: MatTableDataSource<Applicant>;
 	applicatsDataSource: Applicant[] = new Array;
 	applicant!: Applicant;
@@ -21,12 +22,13 @@ export class ApplicantsComponent implements OnInit  {
 	@ViewChild(MatPaginator) paginator!: MatPaginator;
 	@ViewChild(MatSort) sort!: MatSort;
   
-	constructor (public dialog: MatDialog, private applicantsService: ApplicantsService) { }
+	constructor (public dialog: MatDialog, private adminService: AdminService) { }
 	ngOnInit(): void {
-		if(!this.applicantsService.getApplicantsData()){
+		if(!this.adminService.getApplicantsData()){
 			this.loadGeneralApplicants();
 		}else{
-			this.dataSource = new MatTableDataSource(this.applicantsService.getApplicantsData());
+			this.applicatsDataSource = this.adminService.getApplicantsData();
+			this.dataSource = new MatTableDataSource(this.applicatsDataSource );
 		}
 	}
 	ngAfterViewInit(){
@@ -34,13 +36,16 @@ export class ApplicantsComponent implements OnInit  {
 		this.dataSource.sort = this.sort;
 	}
 	loadGeneralApplicants(): void{
-		this.applicantsService.findGeneral().subscribe({
+		this.progress = true;
+		this.adminService.findApplicants().subscribe({
 			next: res => {
-				this.applicantsService.saveApplicantsData(res);
+				this.adminService.saveApplicantsData(res);
 				this.ngOnInit();
 				this.ngAfterViewInit();
+				this.progress = false;
 			},error: err => {
-				console.log(err)
+				console.log(err);
+				this.progress = false;
 			}
 		});
 	}
@@ -54,8 +59,16 @@ export class ApplicantsComponent implements OnInit  {
 		disableClose: true //disables closing on clicking outside box. You will need to make a dedicated button to close
 	  });
 	  dialogRef.componentInstance.applicant = applicant;
-	  dialogRef.afterClosed().subscribe(res => {
-		this.loadGeneralApplicants();
+	  dialogRef.afterClosed().subscribe((res: Applicant) => {
+		if(res){
+			const index = this.applicatsDataSource.indexOf(res);
+			if (index > -1) {
+				this.applicatsDataSource.splice(index,1);
+				this.adminService.saveApplicantsData(this.applicatsDataSource);
+				this.ngOnInit();
+				this.ngAfterViewInit();
+			}
+		}
 	  });
 	}
   

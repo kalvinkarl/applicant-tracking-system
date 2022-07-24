@@ -40,11 +40,17 @@
 					DENR JOBS 
 				</a>
 				<span *ngIf="!(isHandset$ | async)">
-					<a mat-button [matMenuTriggerFor]="menu"> Menu </a>
-					<mat-menu #menu="matMenu">
+					<a mat-button [matMenuTriggerFor]="generalList" routerLinkActive="active-link" > General List </a>
+					<mat-menu #generalList="matMenu">
 						<button mat-menu-item routerLink="/admin/applicants" >Applicants</button>
 						<button mat-menu-item routerLink="/admin/general">General List</button>
 					</mat-menu>
+					<a mat-button routerLinkActive="active-link"> Pre assessment </a>
+					<a mat-button routerLinkActive="active-link"> Long List </a>
+					<!-- <mat-menu #preAssessment="matMenu">
+						<button mat-menu-item>Applicants</button>
+						<button mat-menu-item>General List</button>
+					</mat-menu> -->
 				</span>
 			</span>
 			<span *ngIf="!(isHandset$ | async)">

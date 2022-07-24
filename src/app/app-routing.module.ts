@@ -12,7 +12,7 @@ import { ProfileComponent } from './components/admin/profile/profile.component';
 import { ApplicantsComponent } from './components/admin/applicants/applicants.component';
 import { GeneralComponent } from './components/admin/general/general.component';
 import { AuthGuard } from './services/auth.guard';
-import { AdminGuard } from './services/admin/admin.guard';
+import { AdminGuard } from './services/admin.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent,

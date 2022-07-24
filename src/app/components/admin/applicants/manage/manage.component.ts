@@ -3,10 +3,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Applicant } from 'src/app/models/admin/applicant';
-import { GeneralEvaluation, Experience, Training } from 'src/app/models/admin/general';
+import { Applicant, Achievement, Experience, Training} from 'src/app/models/admin';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
-import { ApplicantsService } from 'src/app/services/admin/applicants.service';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
 	selector: 'app-manage',
@@ -17,14 +16,14 @@ export class ManageComponent implements OnInit {
 	progress!: Boolean;
 	step = 0;
 	readonly separatorKeysCodes = [ENTER, COMMA] as const;
-	generalEvaluationForm!: FormGroup;
+	achievementForm!: FormGroup;
 	experiencesForm!: FormGroup;
 	trainingsForm!: FormGroup;
 	applicant!: Applicant;
 	eligibilities: string[] = new Array;
 	educationalAttainments: string[] = new Array;
 
-	generalEvaluation!: GeneralEvaluation;
+	achievement!: Achievement;
 	experiences: Experience[]= new Array<Experience>;
 	trainings: Training[] = new Array<Training>;
 	
@@ -36,8 +35,8 @@ export class ManageComponent implements OnInit {
 	@ViewChild('experiencesTable') experiencesTable!: MatTable<Experience>;
 	@ViewChild('trainingsTable') trainingsTable!: MatTable<Training>;
 
-	constructor(private dialogRef: MatDialogRef<ManageComponent>,private applicantsService: ApplicantsService) {
-		this.generalEvaluationForm = new FormGroup({
+	constructor(private dialogRef: MatDialogRef<ManageComponent>,private adminService: AdminService) {
+		this.achievementForm = new FormGroup({
 			applicantId: new FormControl(''),
 			salaryGrade: new FormControl('',Validators.required),
 			placeOfAssignment: new FormControl('',Validators.required),
@@ -66,37 +65,34 @@ export class ManageComponent implements OnInit {
 	ngOnInit(): void { }
 
 	onSave(){
-		if(this.generalEvaluationForm.valid){
+		if(this.achievementForm.valid){
 			this.progress = true;
-			this.generalEvaluationForm.value.applicantId = this.applicant.id;
-			this.generalEvaluationForm.value.eligibility =  this.eligibilities.join(',');
-			this.generalEvaluationForm.value.educationalAttainment =  this.educationalAttainments.join(',');
+			this.achievementForm.value.applicantId = this.applicant.id;
+			this.achievementForm.value.eligibility =  this.eligibilities.join(',');
+			this.achievementForm.value.educationalAttainment =  this.educationalAttainments.join(',');
 			this.experiencesForm.value.applicantId = this.applicant.id;
 			this.trainingsForm.value.applicantId = this.applicant.id;
-			this.applicantsService.createEvaluation(this.generalEvaluationForm.value).subscribe({
+			this.adminService.createEvaluation(this.achievementForm.value).subscribe({
 				next: res => {
-					console.log(res)
 					if(this.experiences.length > 0){
 						this.experiences.forEach((experience, index, array) => {
-							this.applicantsService.createExperience(experience).subscribe({
+							this.adminService.createExperience(experience).subscribe({
 								next: res => {
-									console.log(res)
 									if(index === array.length - 1){
 										if(this.trainings.length > 0){
 											this.trainings.forEach((training, index, array) => {
-												this.applicantsService.createTraining(training).subscribe({
+												this.adminService.createTraining(training).subscribe({
 													next: res => {
-														console.log(res)
 														if(index === array.length - 1){
 															this.progress = false;
-															this.dialogRef.close();
+															this.dialogRef.close(this.applicant);
 														}
 													}, error: err => { console.log(err) }
 												});
 											});
 										}else{
 											this.progress = false;
-											this.dialogRef.close();
+											this.dialogRef.close(this.applicant);
 										}
 									}
 								}, error: err => { console.log(err) }
@@ -104,28 +100,27 @@ export class ManageComponent implements OnInit {
 						});
 					}else if(this.trainings.length > 0){
 						this.trainings.forEach((training, index, array) => {
-							this.applicantsService.createTraining(training).subscribe({
+							this.adminService.createTraining(training).subscribe({
 								next: res => {
-									console.log(res)
 									if(index === array.length - 1){
 										this.progress = false;
-										this.dialogRef.close();
+										this.dialogRef.close(this.applicant);
 									}
 								}, error: err => { console.log(err) }
 							});
 						});
 					}else{
 						this.progress = false;
-						this.dialogRef.close();
+						this.dialogRef.close(this.applicant);
 					}
 				}, error: err => { console.log(err) }
 			});
 		}else{
-			this.generalEvaluationForm.markAllAsTouched();
+			this.achievementForm.markAllAsTouched();
 			this.eligibilityChipList.errorState = !this.eligibilities.length;
 			this.educationChipList.errorState = !this.educationalAttainments.length;
 		}
-		// console.log(this.generalEvaluationForm.value);
+		// console.log(this.achievementForm.value);
 		// this.experiences.forEach( experience => {
 		// 	console.log(experience);
 		// });
@@ -210,10 +205,10 @@ export class ManageComponent implements OnInit {
 	}
 	nextStep() {
 		if(this.step === 0){
-			this.generalEvaluationForm.markAllAsTouched();
+			this.achievementForm.markAllAsTouched();
 			this.eligibilityChipList.errorState = !this.eligibilities.length;
 			this.educationChipList.errorState = !this.educationalAttainments.length;
-			if(this.generalEvaluationForm.valid){
+			if(this.achievementForm.valid){
 				this.step++;
 			}
 		}else if(this.step === 2){

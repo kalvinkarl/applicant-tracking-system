@@ -10,7 +10,7 @@
 			<mat-expansion-panel-header>
 				<mat-panel-title> Personal data </mat-panel-title>
 			</mat-expansion-panel-header>
-			<form [formGroup]="generalEvaluationForm" novalidate>
+			<form [formGroup]="achievementForm" novalidate>
 				<mat-grid-list cols="3" rowHeight="70px" gutterSize="10px">
 					<mat-grid-tile>
 						<mat-form-field appearance="fill">
@@ -69,7 +69,7 @@
 								</mat-chip>
 								<input formControlName="eligibility" [matChipInputFor]="eligibilityChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addEligibility($event)">					
 							</mat-chip-list>
-							<mat-error *ngIf="generalEvaluationForm.controls['eligibility'].hasError('required')">
+							<mat-error *ngIf="achievementForm.controls['eligibility'].hasError('required')">
 								Eligibility is <strong>required</strong>
 							</mat-error>
 						</mat-form-field>
@@ -78,10 +78,10 @@
 						<mat-form-field appearance="fill">
 							<mat-label>Latest IPCR rating</mat-label>
 							<input type="number" matInput formControlName="latestIpcrRating" min="0" max="5">
-							<mat-error *ngIf="generalEvaluationForm.controls['latestIpcrRating'].hasError('required')">
+							<mat-error *ngIf="achievementForm.controls['latestIpcrRating'].hasError('required')">
 								Latest IPCR rating is <strong>required</strong>
 							</mat-error>
-							<mat-error *ngIf="generalEvaluationForm.controls['latestIpcrRating'].hasError('min') || generalEvaluationForm.controls['latestIpcrRating'].hasError('max')">
+							<mat-error *ngIf="achievementForm.controls['latestIpcrRating'].hasError('min') || achievementForm.controls['latestIpcrRating'].hasError('max')">
 								Enter a valid <strong>Latest IPCR rating</strong>
 							</mat-error>
 						</mat-form-field>
@@ -98,7 +98,7 @@
 								</mat-chip>
 								<input formControlName="educationalAttainment" [matChipInputFor]="educationChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="addEducation($event)">
 							</mat-chip-list>
-							<mat-error *ngIf="generalEvaluationForm.controls['educationalAttainment'].hasError('required')">
+							<mat-error *ngIf="achievementForm.controls['educationalAttainment'].hasError('required')">
 								Educational attainment is <strong>required</strong>
 							</mat-error>
 						</mat-form-field>
