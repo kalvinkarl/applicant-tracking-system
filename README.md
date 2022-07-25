@@ -10,70 +10,70 @@ This documentation covers all procedures on how DENR HR API works, also examples
 # Working progress
 ## Authentication
 - In user management i create rules:
-    - username: must be grater than 3
-    - passoword: must have 8 or more characters with a mix of Lowercase letters, Uppercase letters , numbers & symbols
-    - email: must verify before loging into the system.
-    - user can send success registration only (2)twice/ day/ device.
-    - initially, your role is applicant, only super administrator can change that to anything he wants,
-    - but super administrators doesn't anything to do with lost accounts, passwords, or even retrieving it to the users.
-    - super administrator can also make a user but only for administrator(human resource user) only.
-    ```json
-    {
-        "username": "kalvinkarl",
-        "email": "sample@email.com",
-        "password": "Password@12345"
-    }
-	```
-- Success: 
-    ```json
+	- username: must be grater than 3
+	- passoword: must have 8 or more characters with a mix of Lowercase letters, Uppercase letters , numbers & symbols
+	- email: must verify before loging into the system.
+	- user can send success registration only (2)twice/ day/ device.
+	- initially, your role is applicant, only super administrator can change that to anything he wants,
+	- but super administrators doesn't anything to do with lost accounts, passwords, or even retrieving it to the users.
+	- super administrator can also make a user but only for administrator(human resource user) only.
+
+POST - Create a new user - HTTP Response Code: **201**
+```json
 	{
-		"message": "Verification email sent.",
-		"result": {
-		"userId": 6,
-		"uniqueString": "$2a$12$vOjKBDomDqxcbVja3oR16ed5HaBIEUSgsmXcFlD2djj82J0yv4e/O",
-		"createdAt": "2022-07-25T21:16:46.380Z",
-		"expiresAt": "2022-07-26T03:16:46.380Z"
-		},
-		"info": {
-		"accepted": [
-			"sample@email.com"
-		],
-		"rejected": [],
-		"envelopeTime": 685,
-		"messageTime": 664,
-		"messageSize": 552,
-		"response": "250 2.0.0 OK  1658783870 k13-20020a170902c40d00b0016d21697ed9sm3052642plk.48 - gsmtp",
-		"envelope": {
-		"from": "kalvinkarl28@gmail.com",
-		"to": [
-			"sample@email.com"
-		]
-		},
-		    "messageId": "<97f0a1d9-5506-dfcb-9e9d-51312f2d4d92@gmail.com>"
-		}
+		"username": "kalvinkarl",
+		"email": "sample@email.com",
+		"password": "Password@12345"
 	}
-	```
-- Failed returns if a user exist:
-    ```json
-	{
-    	"title": "Exist",
-    	"message": "User is already exist, please login using your username kalvinkarl"
+```
+Success:
+```json
+{
+	"message": "Verification email sent.",
+	"result": {
+	"userId": 6,
+	"uniqueString": "$2a$12$vOjKBDomDqxcbVja3oR16ed5HaBIEUSgsmXcFlD2djj82J0yv4e/O",
+	"createdAt": "2022-07-25T21:16:46.380Z",
+	"expiresAt": "2022-07-26T03:16:46.380Z"
+	},
+	"info": {
+	"accepted": [
+		"sample@email.com"
+	],
+	"rejected": [],
+	"envelopeTime": 685,
+	"messageTime": 664,
+	"messageSize": 552,
+	"response": "250 2.0.0 OK  1658783870 k13-20020a170902c40d00b0016d21697ed9sm3052642plk.48 - gsmtp",
+	"envelope": {
+	"from": "kalvinkarl28@gmail.com",
+	"to": [
+		"sample@email.com"
+	]
+	},
+		"messageId": "<97f0a1d9-5506-dfcb-9e9d-51312f2d4d92@gmail.com>"
 	}
-	```
-- Failed returns if the email exist:
-    ```json
-	{
-    	"title": "Email",
-    	"message": "User is already exist, please login using your username sample@email.com"
-	}
-	```
-- Failed returns if the username exist:
-    ```json
-	{
-    	"title": "Username",
-    	"message": "User is already exist, please login using your username kalvinkarl"
-	}
-	```
+}
+```
+Failed - HTTP Response Code: **409**
+```json
+{
+	"title": "Exist",
+	"message": "User is already exist, please login using your username kalvinkarl"
+}
+```
+```json
+{
+	"title": "Email",
+	"message": "User is already exist, please login using your username sample@email.com"
+}
+```
+```json
+{
+	"title": "Username",
+	"message": "User is already exist, please login using your username kalvinkarl"
+}
+```
 ## Administrators
 ### User management
 ### Office Management
