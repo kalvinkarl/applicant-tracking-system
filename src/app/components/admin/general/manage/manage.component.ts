@@ -72,7 +72,7 @@ export class ManageComponent implements OnInit {
 			this.achievementForm.value.educationalAttainment =  this.educationalAttainments.join(',');
 			this.experiencesForm.value.applicantId = this.applicant.id;
 			this.trainingsForm.value.applicantId = this.applicant.id;
-			this.adminService.createEvaluation(this.achievementForm.value).subscribe({
+			this.adminService.createAchievement(this.achievementForm.value).subscribe({
 				next: res => {
 					console.log(res)
 					if(this.experiences.length > 0){

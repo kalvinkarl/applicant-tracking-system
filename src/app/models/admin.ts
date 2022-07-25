@@ -8,6 +8,7 @@ export class Applicant{
 	gender?:  String;
 	age?:  String;
 	birthday?: String;
+	achievement?: Number;
 }
 export class Achievement{
 	applicantId?: Number;

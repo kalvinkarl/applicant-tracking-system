@@ -1,7 +1,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Applicant, Achievement, Experience, Training} from 'src/app/models/admin';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
@@ -23,8 +23,8 @@ export class ManageComponent implements OnInit {
 	eligibilities: string[] = new Array;
 	educationalAttainments: string[] = new Array;
 
-	achievement!: Achievement;
-	experiences: Experience[]= new Array<Experience>;
+	achievement: Achievement = new Achievement;
+	experiences: Experience[] = new Array<Experience>;
 	trainings: Training[] = new Array<Training>;
 	
 	experiencesColumns: string[] = ['positionDesignation', 'from', 'to', 'remove'];
@@ -35,7 +35,7 @@ export class ManageComponent implements OnInit {
 	@ViewChild('experiencesTable') experiencesTable!: MatTable<Experience>;
 	@ViewChild('trainingsTable') trainingsTable!: MatTable<Training>;
 
-	constructor(private dialogRef: MatDialogRef<ManageComponent>,private adminService: AdminService) {
+	constructor(private dialogRef: MatDialogRef<ManageComponent>,private adminService: AdminService,@Inject(MAT_DIALOG_DATA) public data:{editApplicant: Applicant}) {
 		this.achievementForm = new FormGroup({
 			applicantId: new FormControl(''),
 			salaryGrade: new FormControl('',Validators.required),
@@ -62,8 +62,32 @@ export class ManageComponent implements OnInit {
 			typeOfLD: new FormControl('',Validators.required)
 		});
 	}
-	ngOnInit(): void { }
-
+	ngOnInit(): void {
+		if(this.data){
+			this.progress = true;
+			this.adminService.findAchievements(this.data.editApplicant).subscribe({
+				next: res=>{
+					this.achievementForm.patchValue({
+						applicantId: res.achievement.applicantId,
+						salaryGrade: res.achievement.salaryGrade,
+						placeOfAssignment: res.achievement.placeOfAssignment,
+						statusOfAppointment: res.achievement.statusOfAppointment,
+						dateOfLastPromotion: res.achievement.dateOfLastPromotion,
+						latestIpcrRating: res.achievement.latestIpcrRating
+					});
+					this.eligibilities = res.achievement.eligibility.split(',');
+					this.educationalAttainments = res.achievement.educationalAttainment.split(',');
+					this.achievement = res.achievement;
+					this.experiences = res.experiences;
+					this.trainings = res.trainings;
+					this.progress = false;
+				},
+				error: err =>{
+					console.log(err);
+				}
+			});
+		}
+	}
 	onSave(){
 		if(this.achievementForm.valid){
 			this.progress = true;
@@ -72,61 +96,63 @@ export class ManageComponent implements OnInit {
 			this.achievementForm.value.educationalAttainment =  this.educationalAttainments.join(',');
 			this.experiencesForm.value.applicantId = this.applicant.id;
 			this.trainingsForm.value.applicantId = this.applicant.id;
-			this.adminService.createEvaluation(this.achievementForm.value).subscribe({
-				next: res => {
-					if(this.experiences.length > 0){
-						this.experiences.forEach((experience, index, array) => {
-							this.adminService.createExperience(experience).subscribe({
-								next: res => {
-									if(index === array.length - 1){
-										if(this.trainings.length > 0){
-											this.trainings.forEach((training, index, array) => {
-												this.adminService.createTraining(training).subscribe({
-													next: res => {
-														if(index === array.length - 1){
-															this.progress = false;
-															this.dialogRef.close(this.applicant);
-														}
-													}, error: err => { console.log(err) }
+			// console.log(this.achievementForm.value);
+			// this.experiences.forEach( experience => {
+			// 	console.log(experience);
+			// });
+			// this.trainings.forEach(training => {
+			// 	console.log(training);
+			// });
+			if(!this.data){
+				this.adminService.createAchievement(this.achievementForm.value).subscribe({
+					next: res => {
+						if(this.experiences.length > 0){
+							this.experiences.forEach((experience, index, array) => {
+								this.adminService.createExperience(experience).subscribe({
+									next: res => {
+										if(index === array.length - 1){
+											if(this.trainings.length > 0){
+												this.trainings.forEach((training, index, array) => {
+													this.adminService.createTraining(training).subscribe({
+														next: res => {
+															if(index === array.length - 1){
+																this.progress = false;
+																this.dialogRef.close(this.applicant);
+															}
+														}, error: err => { console.log(err) }
+													});
 												});
-											});
-										}else{
+											}else{
+												this.progress = false;
+												this.dialogRef.close(this.applicant);
+											}
+										}
+									}, error: err => { console.log(err) }
+								});
+							});
+						}else if(this.trainings.length > 0){
+							this.trainings.forEach((training, index, array) => {
+								this.adminService.createTraining(training).subscribe({
+									next: res => {
+										if(index === array.length - 1){
 											this.progress = false;
 											this.dialogRef.close(this.applicant);
 										}
-									}
-								}, error: err => { console.log(err) }
+									}, error: err => { console.log(err) }
+								});
 							});
-						});
-					}else if(this.trainings.length > 0){
-						this.trainings.forEach((training, index, array) => {
-							this.adminService.createTraining(training).subscribe({
-								next: res => {
-									if(index === array.length - 1){
-										this.progress = false;
-										this.dialogRef.close(this.applicant);
-									}
-								}, error: err => { console.log(err) }
-							});
-						});
-					}else{
-						this.progress = false;
-						this.dialogRef.close(this.applicant);
-					}
-				}, error: err => { console.log(err) }
-			});
+						}else{
+							this.progress = false;
+							this.dialogRef.close(this.applicant);
+						}
+					}, error: err => { console.log(err) }
+				});
+			}
 		}else{
 			this.achievementForm.markAllAsTouched();
 			this.eligibilityChipList.errorState = !this.eligibilities.length;
 			this.educationChipList.errorState = !this.educationalAttainments.length;
 		}
-		// console.log(this.achievementForm.value);
-		// this.experiences.forEach( experience => {
-		// 	console.log(experience);
-		// });
-		// this.trainings.forEach(training => {
-		// 	console.log(training);
-		// });
 	}
 	//Eligibiiligy button events
 	addEligibility(event: MatChipInputEvent): void {
@@ -208,7 +234,7 @@ export class ManageComponent implements OnInit {
 			this.achievementForm.markAllAsTouched();
 			this.eligibilityChipList.errorState = !this.eligibilities.length;
 			this.educationChipList.errorState = !this.educationalAttainments.length;
-			if(this.achievementForm.valid){
+			if(this.achievementForm.valid || this.data){
 				this.step++;
 			}
 		}else if(this.step === 2){

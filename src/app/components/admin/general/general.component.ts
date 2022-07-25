@@ -22,9 +22,10 @@ export class GeneralComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(public dialog: MatDialog, private adminService: AdminService) {
+  }
+  ngOnInit(): void {
     this.loadGeneralApplicants();
   }
-  ngOnInit(): void { }
 
   loadGeneralApplicants(): void{
     this.adminService.findGeneral().subscribe({
