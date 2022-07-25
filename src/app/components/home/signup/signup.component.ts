@@ -24,8 +24,7 @@ export class SignupComponent implements OnInit  {
       username: new FormControl('', [Validators.required, Validators.minLength(4), Validators.pattern('^[a-zA-Z0-9.]*$')]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password:  new FormControl('', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]),
-      passwordConfirm:  new FormControl('', [Validators.required, Validators.minLength(7)]),
-      role: new FormControl('ap')
+      passwordConfirm:  new FormControl('', [Validators.required, Validators.minLength(7)])
     });
   }
   ngOnInit(): void {
