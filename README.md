@@ -26,32 +26,32 @@ This documentation covers all procedures on how DENR HR API works, also examples
 	```
 - Success: 
     ```json
-        {
-            "message": "Verification email sent.",
-            "result": {
-            "userId": 6,
-            "uniqueString": "$2a$12$vOjKBDomDqxcbVja3oR16ed5HaBIEUSgsmXcFlD2djj82J0yv4e/O",
-            "createdAt": "2022-07-25T21:16:46.380Z",
-            "expiresAt": "2022-07-26T03:16:46.380Z"
-            },
-            "info": {
-            "accepted": [
-                "sample@email.com"
-            ],
-            "rejected": [],
-            "envelopeTime": 685,
-            "messageTime": 664,
-            "messageSize": 552,
-            "response": "250 2.0.0 OK  1658783870 k13-20020a170902c40d00b0016d21697ed9sm3052642plk.48 - gsmtp",
-            "envelope": {
-            "from": "kalvinkarl28@gmail.com",
-            "to": [
-                "sample@email.com"
-            ]
-            },
-            "messageId": "<97f0a1d9-5506-dfcb-9e9d-51312f2d4d92@gmail.com>"
-            }
-        }
+	{
+		"message": "Verification email sent.",
+		"result": {
+		"userId": 6,
+		"uniqueString": "$2a$12$vOjKBDomDqxcbVja3oR16ed5HaBIEUSgsmXcFlD2djj82J0yv4e/O",
+		"createdAt": "2022-07-25T21:16:46.380Z",
+		"expiresAt": "2022-07-26T03:16:46.380Z"
+		},
+		"info": {
+		"accepted": [
+			"sample@email.com"
+		],
+		"rejected": [],
+		"envelopeTime": 685,
+		"messageTime": 664,
+		"messageSize": 552,
+		"response": "250 2.0.0 OK  1658783870 k13-20020a170902c40d00b0016d21697ed9sm3052642plk.48 - gsmtp",
+		"envelope": {
+		"from": "kalvinkarl28@gmail.com",
+		"to": [
+			"sample@email.com"
+		]
+		},
+		    "messageId": "<97f0a1d9-5506-dfcb-9e9d-51312f2d4d92@gmail.com>"
+		}
+	}
 	```
 - Failed returns if a user exist:
     ```json
