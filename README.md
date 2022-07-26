@@ -7,9 +7,9 @@ This documentation covers all procedures on how to use DENR HR API, feel free to
 - API comming soon...
 - This application will monitor and serve application process of clients of DENR Region 2.
 
-# Working in progress
-### Authentication *
-## Administrators
+>Working in progress
+# Administrators
+### [Authentication](#Authentication) *
 ### User management *
 ### Office Management
 ### Salary Grade Management
@@ -25,7 +25,7 @@ This documentation covers all procedures on how to use DENR HR API, feel free to
 ### Short List Management and Report
 ### Appointment Management and Report
 ### Signatory Management
-## Users
+# Users
 ### Job Portal (Landing/Page)
 ### My Application
 ### Profile
