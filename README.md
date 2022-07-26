@@ -32,7 +32,7 @@ This documentation covers all procedures on how to use DENR HR API, feel free to
 ### Downloadable Forms
 
 ## Authentication
-- In user management i create rules:
+- Rules:
 	- username: must be grater than 3
 	- passoword: must have 8 or more characters with a mix of Lowercase letters, Uppercase letters , numbers & symbols
 	- email: must verify before loging into the system.
