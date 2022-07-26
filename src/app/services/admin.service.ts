@@ -33,7 +33,15 @@ export class AdminService {
   createTraining(training: Training): Observable<Training> {
     return this.http.post(`${environment.apiUrl}/admin/applicants/achievement/training`,training, httpOptions);
   }
-  
+  updateAchievement(achievement: Achievement): Observable<Achievement> {
+    return this.http.put(`${environment.apiUrl}/admin/applicants/achievement`, achievement ,httpOptions);
+  }
+  updateExperience(experience: Experience): Observable<Experience> {
+    return this.http.put(`${environment.apiUrl}/admin/applicants/achievement/experience`,experience, httpOptions);
+  }
+  updateTraining(training: Training): Observable<Training> {
+    return this.http.put(`${environment.apiUrl}/admin/applicants/achievement/training`,training, httpOptions);
+  }
 
   public deleteDataSource(): void {
     window.localStorage.removeItem(DATA_SOURCE_KEY);

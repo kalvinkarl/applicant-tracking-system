@@ -76,7 +76,7 @@
 					</mat-grid-tile>
 					<mat-grid-tile>
 						<mat-form-field appearance="fill">
-							<mat-label>Latest IPCR rating</mat-label>
+							<mat-label>Latest IPCR rating (LEAVE BLANK IF NONE)</mat-label>
 							<input type="number" matInput formControlName="latestIpcrRating" min="0" max="5">
 							<mat-error *ngIf="achievementForm.controls['latestIpcrRating'].hasError('required')">
 								Latest IPCR rating is <strong>required</strong>

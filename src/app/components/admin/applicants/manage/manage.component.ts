@@ -147,6 +147,13 @@ export class ManageComponent implements OnInit {
 						}
 					}, error: err => { console.log(err) }
 				});
+			}else{
+				this.adminService.updateAchievement(this.achievementForm.value).subscribe({
+					next: res => {
+						this.progress = false;
+						this.dialogRef.close(this.applicant);
+					}, error: err => { console.log(err) }
+				});
 			}
 		}else{
 			this.achievementForm.markAllAsTouched();
