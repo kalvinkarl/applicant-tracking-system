@@ -26,10 +26,14 @@ export class GeneralComponent implements OnInit {
   }
   ngOnInit(): void {
 		this.adminService.getGeneralApplicantsData().then(res => {
-			if(res.name === 'general-applicants'){
-				this.dataSource = new MatTableDataSource(res.data);
-				this.dataSource.paginator = this.paginator;
-				this.dataSource.sort = this.sort;
+			if(res){
+        if(res.name === 'general-applicants'){
+          this.dataSource = new MatTableDataSource(res.data);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }else{
+          this.loadGeneralApplicants();
+        }
 			}else{
 				this.loadGeneralApplicants();
 			}

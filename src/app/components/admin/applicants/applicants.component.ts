@@ -24,11 +24,15 @@ export class ApplicantsComponent implements OnInit  {
 	constructor (public dialog: MatDialog, private adminService: AdminService) { }
 	ngOnInit(): void{
 		this.adminService.getApplicantsData().then(res => {
-			if(res.name === 'applicants'){
-				this.dataSource = new MatTableDataSource(res.data);
-				this.dataSource.paginator = this.paginator;
-				this.dataSource.sort = this.sort;
-				this.applicatsDataSource = res.data;
+			if(res){
+				if(res.name === 'applicants'){
+					this.dataSource = new MatTableDataSource(res.data);
+					this.dataSource.paginator = this.paginator;
+					this.dataSource.sort = this.sort;
+					this.applicatsDataSource = res.data;
+				}else{
+					this.loadApplicants();
+				}
 			}else{
 				this.loadApplicants();
 			}
