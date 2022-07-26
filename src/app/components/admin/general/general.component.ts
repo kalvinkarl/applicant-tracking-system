@@ -13,6 +13,7 @@ import { AdminService } from 'src/app/services/admin.service';
   styleUrls: ['./general.component.scss']
 })
 export class GeneralComponent implements OnInit {
+	progress!: Boolean;
   displayedColumns: string[] = ['firstname', 'gender', 'age', 'contactNumber', 'actions'];
   dataSource!: MatTableDataSource<Applicant>;
   applicants!: any;
@@ -24,34 +25,47 @@ export class GeneralComponent implements OnInit {
   constructor(public dialog: MatDialog, private adminService: AdminService) {
   }
   ngOnInit(): void {
-    this.loadGeneralApplicants();
+		this.adminService.getGeneralApplicantsData().then(res => {
+			if(res.name === 'general-applicants'){
+				this.dataSource = new MatTableDataSource(res.data);
+				this.dataSource.paginator = this.paginator;
+				this.dataSource.sort = this.sort;
+			}else{
+				this.loadGeneralApplicants();
+			}
+		});
   }
-
   loadGeneralApplicants(): void{
+		this.progress = true;
     this.adminService.findGeneral().subscribe({
       next: res => {
-        this.applicants = res;
-        this.dataSource = new MatTableDataSource(this.applicants);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+				this.adminService.saveApplicantsData('general-applicants',res);
+				this.dataSource = new MatTableDataSource(res);
+				this.dataSource.paginator = this.paginator;
+				this.dataSource.sort = this.sort;
+				this.progress = false;
       },error: err => {
-        console.log(err)
+				console.log(err);
+				this.progress = false;
       }
     });
   }
   onManage(applicant: Applicant){
-    const dialogRef = this.dialog.open(ManageComponent,{
-      autoFocus: false,
-      width: '95vw', //sets width of dialog
-      // height:'95vh', //sets width of dialog
-      maxWidth: '100vw', //overrides default width of dialog
-      // maxHeight: '100vh', //overrides default height of dialog
-      disableClose: true //disables closing on clicking outside box. You will need to make a dedicated button to close
-    });
-    dialogRef.componentInstance.applicant = applicant;
-    dialogRef.afterClosed().subscribe(res => {
-      this.loadGeneralApplicants();
-    });
+    if(confirm('Manage:'+applicant.firstname)){
+      console.log(applicant);
+    }
+    // const dialogRef = this.dialog.open(ManageComponent,{
+    //   autoFocus: false,
+    //   width: '95vw', //sets width of dialog
+    //   // height:'95vh', //sets width of dialog
+    //   maxWidth: '100vw', //overrides default width of dialog
+    //   // maxHeight: '100vh', //overrides default height of dialog
+    //   disableClose: true //disables closing on clicking outside box. You will need to make a dedicated button to close
+    // });
+    // dialogRef.componentInstance.applicant = applicant;
+    // dialogRef.afterClosed().subscribe(res => {
+    //   this.loadGeneralApplicants();
+    // });
   }
 
   onEdit(user: any){

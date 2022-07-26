@@ -23,37 +23,36 @@ export class AdminService {
   findAchievements(applicant: Applicant): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/admin/applicants/achievements/${applicant.id}`, httpOptions);
   }
-
   createAchievement(achievement: Achievement): Observable<Achievement> {
     return this.http.post(`${environment.apiUrl}/admin/applicants/achievement`, achievement ,httpOptions);
-  }
-  createExperience(experience: Experience): Observable<Experience> {
-    return this.http.post(`${environment.apiUrl}/admin/applicants/achievement/experience`,experience, httpOptions);
   }
   createTraining(training: Training): Observable<Training> {
     return this.http.post(`${environment.apiUrl}/admin/applicants/achievement/training`,training, httpOptions);
   }
+  createExperience(experience: Experience): Observable<Experience> {
+    return this.http.post(`${environment.apiUrl}/admin/applicants/achievement/experience`,experience, httpOptions);
+  }
   updateAchievement(achievement: Achievement): Observable<Achievement> {
     return this.http.put(`${environment.apiUrl}/admin/applicants/achievement`, achievement ,httpOptions);
   }
-  updateExperience(experience: Experience): Observable<Experience> {
-    return this.http.put(`${environment.apiUrl}/admin/applicants/achievement/experience`,experience, httpOptions);
+  removeTrainings(applicantId: any): Observable<Training> {
+    return this.http.delete(`${environment.apiUrl}/admin/applicants/achievement/training/${applicantId}`, httpOptions);
   }
-  updateTraining(training: Training): Observable<Training> {
-    return this.http.put(`${environment.apiUrl}/admin/applicants/achievement/training`,training, httpOptions);
+  removeExperiences(applicantId: any): Observable<Experience> {
+    return this.http.delete(`${environment.apiUrl}/admin/applicants/achievement/experience/${applicantId}`, httpOptions);
   }
-
+  public async getApplicantsData(): Promise<any> {
+    return await JSON.parse(localStorage.getItem(DATA_SOURCE_KEY)+'');
+  }
+  public async getGeneralApplicantsData(): Promise<any> {
+    return await JSON.parse(localStorage.getItem(DATA_SOURCE_KEY)+'');
+  }
+  public saveApplicantsData(name: String, applicants: Applicant[]): void {
+    window.localStorage.removeItem(DATA_SOURCE_KEY);
+    window.localStorage.setItem(DATA_SOURCE_KEY,JSON.stringify({name: name, data: applicants}));
+  }
   public deleteDataSource(): void {
     window.localStorage.removeItem(DATA_SOURCE_KEY);
-  }
-
-  public saveApplicantsData(applicants: Applicant[]): void {
-    window.localStorage.removeItem(DATA_SOURCE_KEY);
-    window.localStorage.setItem(DATA_SOURCE_KEY, JSON.stringify(applicants));
-  }
-
-  public async getApplicantsData(): Promise<Applicant[]> {
-    return await JSON.parse(localStorage.getItem(DATA_SOURCE_KEY)+'');
   }
 
 

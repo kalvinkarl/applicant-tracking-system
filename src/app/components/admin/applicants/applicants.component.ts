@@ -24,11 +24,11 @@ export class ApplicantsComponent implements OnInit  {
 	constructor (public dialog: MatDialog, private adminService: AdminService) { }
 	ngOnInit(): void{
 		this.adminService.getApplicantsData().then(res => {
-			if(res){
-				this.dataSource = new MatTableDataSource(res);
+			if(res.name === 'applicants'){
+				this.dataSource = new MatTableDataSource(res.data);
 				this.dataSource.paginator = this.paginator;
 				this.dataSource.sort = this.sort;
-				this.applicatsDataSource = res;
+				this.applicatsDataSource = res.data;
 			}else{
 				this.loadApplicants();
 			}
@@ -38,7 +38,7 @@ export class ApplicantsComponent implements OnInit  {
 		this.progress = true;
 		this.adminService.findApplicants().subscribe({
 			next: res => {
-				this.adminService.saveApplicantsData(res);
+				this.adminService.saveApplicantsData('applicants',res);
 				this.dataSource = new MatTableDataSource(res);
 				this.dataSource.paginator = this.paginator;
 				this.dataSource.sort = this.sort;
@@ -65,7 +65,7 @@ export class ApplicantsComponent implements OnInit  {
 			const index = this.applicatsDataSource.indexOf(res);
 			if (index > -1) {
 				this.applicatsDataSource[index].achievement = res.id;
-				this.adminService.saveApplicantsData(this.applicatsDataSource);
+				this.adminService.saveApplicantsData('applicants',this.applicatsDataSource);
 				this.ngOnInit();
 			}
 		}
@@ -79,7 +79,7 @@ export class ApplicantsComponent implements OnInit  {
 			maxWidth: '100vw', //overrides default width of dialog
 			// maxHeight: '100vh', //overrides default height of dialog
 			disableClose: true, //disables closing on clicking outside box. You will need to make a dedicated button to close
-			data: {editApplicant: applicant}
+			data: {editApplicant: applicant, isEdit: true}
 		});
 		editDialog.componentInstance.applicant = applicant;
 		// editDialog.afterClosed().subscribe((res: Applicant) => {

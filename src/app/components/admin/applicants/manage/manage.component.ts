@@ -35,7 +35,7 @@ export class ManageComponent implements OnInit {
 	@ViewChild('experiencesTable') experiencesTable!: MatTable<Experience>;
 	@ViewChild('trainingsTable') trainingsTable!: MatTable<Training>;
 
-	constructor(private dialogRef: MatDialogRef<ManageComponent>,private adminService: AdminService,@Inject(MAT_DIALOG_DATA) public data:{editApplicant: Applicant}) {
+	constructor(private dialogRef: MatDialogRef<ManageComponent>,private adminService: AdminService,@Inject(MAT_DIALOG_DATA) public data:{editApplicant: Applicant, isEdit: Boolean}) {
 		this.achievementForm = new FormGroup({
 			applicantId: new FormControl(''),
 			salaryGrade: new FormControl('',Validators.required),
@@ -43,8 +43,8 @@ export class ManageComponent implements OnInit {
 			statusOfAppointment: new FormControl('',Validators.required),
 			dateOfLastPromotion: new FormControl('',Validators.required),
 			latestIpcrRating: new FormControl('',[Validators.min(0), Validators.max(5)]),
-			eligibility: new FormControl('',Validators.required),
-			educationalAttainment: new FormControl('',Validators.required)
+			eligibility: new FormControl(''),
+			educationalAttainment: new FormControl('')
 		});
 		this.experiencesForm = new FormGroup({
 			applicantId: new FormControl(''),
@@ -78,8 +78,8 @@ export class ManageComponent implements OnInit {
 					this.eligibilities = res.achievement.eligibility.split(',');
 					this.educationalAttainments = res.achievement.educationalAttainment.split(',');
 					this.achievement = res.achievement;
-					this.experiences = res.experiences;
-					this.trainings = res.trainings;
+					this.experiences = res.experiences || new Array<Experience>;
+					this.trainings = res.trainings || new Array<Training>;
 					this.progress = false;
 				},
 				error: err =>{
@@ -89,7 +89,12 @@ export class ManageComponent implements OnInit {
 		}
 	}
 	onSave(){
-		if(this.achievementForm.valid){
+		if(!this.achievementForm.valid || this.educationalAttainments.length === 0 || this.eligibilities.length === 0){
+			this.setStep(0);
+			this.achievementForm.markAllAsTouched();
+			this.eligibilityChipList.errorState = !this.eligibilities.length;
+			this.educationChipList.errorState = !this.educationalAttainments.length;
+		}else{
 			this.progress = true;
 			this.achievementForm.value.applicantId = this.applicant.id;
 			this.achievementForm.value.eligibility =  this.eligibilities.join(',');
@@ -106,59 +111,60 @@ export class ManageComponent implements OnInit {
 			if(!this.data){
 				this.adminService.createAchievement(this.achievementForm.value).subscribe({
 					next: res => {
-						if(this.experiences.length > 0){
-							this.experiences.forEach((experience, index, array) => {
-								this.adminService.createExperience(experience).subscribe({
-									next: res => {
-										if(index === array.length - 1){
-											if(this.trainings.length > 0){
-												this.trainings.forEach((training, index, array) => {
-													this.adminService.createTraining(training).subscribe({
-														next: res => {
-															if(index === array.length - 1){
-																this.progress = false;
-																this.dialogRef.close(this.applicant);
-															}
-														}, error: err => { console.log(err) }
-													});
-												});
-											}else{
-												this.progress = false;
-												this.dialogRef.close(this.applicant);
-											}
-										}
-									}, error: err => { console.log(err) }
-								});
-							});
-						}else if(this.trainings.length > 0){
-							this.trainings.forEach((training, index, array) => {
-								this.adminService.createTraining(training).subscribe({
-									next: res => {
-										if(index === array.length - 1){
-											this.progress = false;
-											this.dialogRef.close(this.applicant);
-										}
-									}, error: err => { console.log(err) }
-								});
-							});
-						}else{
-							this.progress = false;
-							this.dialogRef.close(this.applicant);
-						}
+						this.saveTrainAndExp();
 					}, error: err => { console.log(err) }
 				});
 			}else{
 				this.adminService.updateAchievement(this.achievementForm.value).subscribe({
 					next: res => {
-						this.progress = false;
-						this.dialogRef.close(this.applicant);
+						this.adminService.removeTrainings(this.applicant.id).subscribe();
+						this.adminService.removeExperiences(this.applicant.id).subscribe();
+						this.saveTrainAndExp();
 					}, error: err => { console.log(err) }
 				});
 			}
+		}
+	}
+	// Save experiences and trainings
+	saveTrainAndExp() :void{
+		if(this.experiences.length > 0){
+			this.experiences.forEach((experience, index, array) => {
+				this.adminService.createExperience(experience).subscribe({
+					next: res => {
+						if(index === array.length - 1){
+							if(this.trainings.length > 0){
+								this.trainings.forEach((training, index, array) => {
+									this.adminService.createTraining(training).subscribe({
+										next: res => {
+											if(index === array.length - 1){
+												this.progress = false;
+												this.dialogRef.close(this.applicant);
+											}
+										}, error: err => { console.log(err) }
+									});
+								});
+							}else{
+								this.progress = false;
+								this.dialogRef.close(this.applicant);
+							}
+						}
+					}, error: err => { console.log(err) }
+				});
+			});
+		}else if(this.trainings.length > 0){
+			this.trainings.forEach((training, index, array) => {
+				this.adminService.createTraining(training).subscribe({
+					next: res => {
+						if(index === array.length - 1){
+							this.progress = false;
+							this.dialogRef.close(this.applicant);
+						}
+					}, error: err => { console.log(err) }
+				});
+			});
 		}else{
-			this.achievementForm.markAllAsTouched();
-			this.eligibilityChipList.errorState = !this.eligibilities.length;
-			this.educationChipList.errorState = !this.educationalAttainments.length;
+			this.progress = false;
+			this.dialogRef.close(this.applicant);
 		}
 	}
 	//Eligibiiligy button events
@@ -238,10 +244,11 @@ export class ManageComponent implements OnInit {
 	}
 	nextStep() {
 		if(this.step === 0){
-			this.achievementForm.markAllAsTouched();
-			this.eligibilityChipList.errorState = !this.eligibilities.length;
-			this.educationChipList.errorState = !this.educationalAttainments.length;
-			if(this.achievementForm.valid || this.data){
+			if(!this.achievementForm.valid || this.educationalAttainments.length === 0 || this.eligibilities.length === 0){
+				this.achievementForm.markAllAsTouched();
+				this.eligibilityChipList.errorState = !this.eligibilities.length;
+				this.educationChipList.errorState = !this.educationalAttainments.length;
+			}else{
 				this.step++;
 			}
 		}else if(this.step === 2){
