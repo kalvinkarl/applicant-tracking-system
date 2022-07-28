@@ -53,6 +53,11 @@ export class SignupComponent implements OnInit  {
       this.progress = true;
       this.userService.signup(this.signupForm.value).subscribe({
         error: (err) => {
+          console.log(err.status);
+          if(err.status === 429){
+            this.manyRequest = true;
+            this.progress = false;
+          }
           if(err.error.title === "Username"){
             this.signupForm.controls['username'].setErrors({duplicate: true});
             this.progress = false;
@@ -62,9 +67,6 @@ export class SignupComponent implements OnInit  {
           }else if(err.error.title === "Exist"){
             this.signupForm.controls['email'].setErrors({duplicate: true});
             this.signupForm.controls['username'].setErrors({ duplicate: true , duplicateBoth: true});
-            this.progress = false;
-          }else if(err.status === 429){
-            this.manyRequest = true;
             this.progress = false;
           }
         },
