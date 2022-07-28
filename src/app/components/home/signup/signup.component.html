@@ -1,4 +1,4 @@
-<mat-card *ngIf="!confirming" class="mat-elevation-z8">
+<mat-card *ngIf="!confirming && !manyRequest" class="mat-elevation-z8">
 	<mat-card-title>
 		<h2>Signup</h2>
 	</mat-card-title>
@@ -82,5 +82,17 @@
 	</mat-card-content>
 	<mat-card-actions>
 		<a [href]="emailDomain" target="_blank" color="accent" mat-raised-button type="submit">Continue</a>
+	</mat-card-actions>
+</mat-card>
+<mat-card *ngIf="manyRequest" class="mat-elevation-z8">
+	<mat-card-title>
+		Too many accounts!
+	</mat-card-title>
+	<mat-divider></mat-divider>
+	<mat-card-content>
+		<p>Too many user accounts for you. Please wait for 24hours for the next one.</p>
+	</mat-card-content>
+	<mat-card-actions>
+		<a routerLink="/" color="accent" mat-raised-button type="submit">Continue</a>
 	</mat-card-actions>
 </mat-card>

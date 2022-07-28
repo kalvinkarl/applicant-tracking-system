@@ -13,7 +13,8 @@ import { UserService } from 'src/app/services/user.service';
 
 export class SignupComponent implements OnInit  {
   signupForm: FormGroup;
-  confirming = false;
+  confirming!: Boolean;
+  manyRequest!: Boolean;
   progress = false;
   hidePa = true;
   hideRe = true;
@@ -61,6 +62,9 @@ export class SignupComponent implements OnInit  {
           }else if(err.error.title === "Exist"){
             this.signupForm.controls['email'].setErrors({duplicate: true});
             this.signupForm.controls['username'].setErrors({ duplicate: true , duplicateBoth: true});
+            this.progress = false;
+          }else if(err.status === 429){
+            this.manyRequest = true;
             this.progress = false;
           }
         },
